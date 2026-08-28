@@ -1,0 +1,26 @@
+name: Test Action
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Generate WakaTime card
+        uses: ./
+        with:
+          wakatime-api-key: ${{ secrets.WAKATIME_API_KEY }}
+          output-path: test-output/wakatime.svg
+          layout: compact
+          langs-count: 8
+          card-width: 300
+          theme: transparent
+          hide-border: true
+
+      - name: Verify output
+        run: test -f test-output/wakatime.svg
