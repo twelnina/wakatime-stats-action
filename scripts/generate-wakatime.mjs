@@ -149,4 +149,7 @@ await mkdir(path.dirname(outputPath), {
 
 await writeFile(outputPath, svg, "utf-8");
 
+console.log(`Modified at: ${data.modified_at}`);
+console.log(`Total seconds: ${data.total_seconds}`);
+
 console.log(`Generated: ${outputPath}`);
