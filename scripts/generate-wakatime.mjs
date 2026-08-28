@@ -3,7 +3,12 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
+const MAX_ATTEMPTS = 5;
+const RETRY_DELAY_MS = 5000;
+
 const apiKey = process.env.WAKATIME_API_KEY;
+
+let data;
 
 const options = {};
 
@@ -86,23 +91,40 @@ if (!apiKey) {
 
 const authorization = Buffer.from(apiKey).toString("base64");
 
-const response = await fetch(
-    "https://api.wakatime.com/api/v1/users/current/stats",
-    {
-        headers: {
-            Authorization: `Basic ${authorization}`,
-            Accept: `application/json`,
+for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const response = await fetch(
+        "https://api.wakatime.com/api/v1/users/current/stats/last_7_days",
+        {
+            headers: {
+                Authorization: `Basic ${authorization}`,
+                Accept: `application/json`,
+            },
         },
-    },
-);
-
-if (!response.ok) {
-    throw new Error(
-        `WakaTime API error: ${response.status} ${response.statusText}`,
     );
-}
 
-const { data } = await response.json();
+    if (!response.ok) {
+        throw new Error(
+            `WakaTime API error: ${response.status} ${response.statusText}`,
+        );
+    }
+
+    const body = await response.json();
+    data = body.data;
+
+    console.log(`Stats status: ${data.percent_calculated}% calculated, up to date: ${data.is_up_to_date}`);
+
+    if (data.is_up_to_date) {
+        break;
+    }
+
+    if (attempt === MAX_ATTEMPTS) {
+        throw new Error(`Wakatime stats are still not up to date after ${MAX_ATTEMPTS} attempts`);
+    }
+
+    console.log(`Stats are still updating. Retrying in ${RETRY_DELAY_MS / 1000} seconds...`)
+
+    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
+}
 
 const require = createRequire(import.meta.url);
 const coreEntry = require.resolve(
