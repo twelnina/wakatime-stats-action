@@ -1,0 +1,117 @@
+name: WakaTime Stats Card
+description: Generate a WakaTime stats card using WakaTime API authentication
+
+inputs:
+  wakatime-api-key:
+    description: WakaTime API key
+    required: true
+  
+  output-path:
+    description: Output SVG path
+    required: false
+    default: wakatime-card.svg
+
+  layout:
+    description: Card layout
+    required: false
+
+  langs-count:
+    description: Number of languages to display
+    required: false
+
+  card-width:
+    description: Card width
+    required: false
+
+  theme:
+    description: Card theme
+    required: false
+
+  hide-border:
+    description: Hide card border
+    required: false
+
+  line-height:
+    description: Line height
+    required: false
+
+  display-format:
+    description: Display format
+    required: false
+
+  hide:
+    description: Comma-separated languages to hide
+    required: false
+
+  hide-title:
+    description: Hide card title
+    required: false
+
+  custom-title:
+    description: Custom card title
+    required: false
+
+  locale:
+    description: Card locale
+    required: false
+  
+  title-color:
+    description: Title color
+    required: false
+
+  text-color:
+    description: Text color
+    required: false
+
+  bg-color:
+    description: Background color
+    required: false
+
+  border-color:
+    description: Border color
+    required: false
+
+  border-radius:
+    description: Border radius
+    required: false
+  
+  disable-animations:
+    description: Disable animations
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v7
+      with:
+        node-version: "24"
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: npm ci
+
+    - name: Generate WakaTime card
+      shell: bash
+      run: node "${{ github.action_path }}/scripts/generate-wakatime.mjs"
+      env:
+        WAKATIME_API_KEY: ${{ inputs.wakatime-api-key }}
+        OUTPUT_PATH: ${{ inputs.output-path }}
+        LAYOUT: ${{ inputs.layout }}
+        LANGS_COUNT: ${{ inputs.langs-count }}
+        CARD_WIDTH: ${{ inputs.card-width }}
+        THEME: ${{ inputs.theme }}
+        HIDE_BORDER: ${{ inputs.hide-border }}
+        LINE_HEIGHT: ${{ inputs.line-height }}
+        DISPLAY_FORMAT: ${{ inputs.display-format }}
+        HIDE: ${{ inputs.hide }}
+        HIDE_TITLE: ${{ inputs.hide-title }}
+        CUSTOM_TITLE: ${{ inputs.custom-title }}
+        LOCALE: ${{ inputs.locale }}
+        TITLE_COLOR: ${{ inputs.title-color }}
+        TEXT_COLOR: ${{ inputs.text-color }}
+        BG_COLOR: ${{ inputs.bg-color }}
+        BORDER_COLOR: ${{ inputs.border-color }}
+        BORDER_RADIUS: ${{ inputs.border-radius }}
+        DISABLE_ANIMATIONS: ${{ inputs.disable-animations }}

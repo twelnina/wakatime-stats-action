@@ -41,8 +41,8 @@ if (process.env.HIDE) {
         .map((lang) => lang.trim());
 }
 
-if (process.env.HIDE_TYTLE) {
-    options.hide_title = process.env.HIDE_TYTLE === "true";
+if (process.env.HIDE_TITLE) {
+    options.hide_title = process.env.HIDE_TITLE === "true";
 }
 
 if (process.env.CUSTOM_TITLE) {
