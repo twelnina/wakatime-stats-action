@@ -5,6 +5,81 @@ import { pathToFileURL } from "node:url";
 
 const apiKey = process.env.WAKATIME_API_KEY;
 
+const options = {};
+
+if (process.env.LAYOUT) {
+    options.layout = process.env.LAYOUT;
+}
+
+if (process.env.LANGS_COUNT) {
+    options.langs_count = Number(process.env.LANGS_COUNT);
+}
+
+if (process.env.CARD_WIDTH) {
+    options.card_width = Number(process.env.CARD_WIDTH);
+}
+
+if (process.env.THEME) {
+    options.theme = process.env.THEME;
+}
+
+if (process.env.HIDE_BORDER) {
+    options.hide_border = process.env.HIDE_BORDER === "true";
+}
+
+if (process.env.LINE_HEIGHT) {
+    options.line_height = Number(process.env.LINE_HEIGHT);
+}
+
+if (process.env.DISPLAY_FORMAT) {
+    options.display_format = process.env.DISPLAY_FORMAT;
+}
+
+if (process.env.HIDE) {
+    options.hide = process.env.HIDE
+        .split(",")
+        .map((lang) => lang.trim());
+}
+
+if (process.env.HIDE_TYTLE) {
+    options.hide_title = process.env.HIDE_TYTLE === "true";
+}
+
+if (process.env.CUSTOM_TITLE) {
+    options.custom_title = process.env.CUSTOM_TITLE;
+}
+
+if (process.env.LOCALE) {
+    options.locale = process.env.LOCALE;
+}
+
+if (process.env.TITLE_COLOR) {
+    options.title_color = process.env.TITLE_COLOR;
+}
+
+if (process.env.TEXT_COLOR) {
+    options.text_color = process.env.TEXT_COLOR;
+}
+
+if (process.env.BG_COLOR) {
+    options.bg_color = process.env.BG_COLOR;
+}
+
+if (process.env.BORDER_COLOR) {
+    options.border_color = process.env.BORDER_COLOR;
+}
+
+if (process.env.BORDER_RADIUS) {
+    options.border_radius = Number(process.env.BORDER_RADIUS);
+}
+
+if (process.env.DISABLE_ANIMATIONS) {
+    options.disable_animations = process.env.DISABLE_ANIMATIONS === "true";
+}
+
+const outputPath = process.env.OUTPUT_PATH ?? "wakatime-card.svg";
+
+
 if (!apiKey) {
     throw new Error("WAKATIME_API_KEY is not set");
 }
@@ -44,15 +119,7 @@ const { renderWakatimeCard } = await import(
     pathToFileURL(rendererPath).href,
 );
 
-const svg = renderWakatimeCard(data, {
-    layout: "compact",
-    langs_count: 8,
-    card_width: 400,
-    theme: "transparent",
-    hide_border: true,
-});
-
-const outputPath = "assets/profile-cards/wakatime.svg";
+const svg = renderWakatimeCard(data, options);
 
 await mkdir(path.dirname(outputPath), {
     recursive: true,
