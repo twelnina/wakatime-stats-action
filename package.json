@@ -4,6 +4,7 @@
   "private": true,
   "description": "Generate a customizable WakaTime stats card using API key authentication",
   "author": "twelnina",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/twelnina/wakatime-stats-action.git"

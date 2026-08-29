@@ -182,3 +182,7 @@ supports gradients in the form `angle,color1,color2`, for example
   short period and fails if the data does not become current.
 - The generated file is overwritten when it already exists.
 - Treat your WakaTime API key as a secret and rotate it if it is exposed.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
