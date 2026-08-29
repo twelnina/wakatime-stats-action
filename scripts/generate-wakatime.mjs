@@ -8,81 +8,39 @@ const RETRY_DELAY_MS = 5000;
 
 const apiKey = process.env.WAKATIME_API_KEY;
 
+const outputPath = process.env.OUTPUT_PATH ?? "wakatime-card.svg";
+
 let data;
+
+const optionDefinitions = {
+    LAYOUT: ["layout", String],
+    LANGS_COUNT: ["langs_count", Number],
+    CARD_WIDTH: ["card_width", Number],
+    THEME: ["theme", String],
+    HIDE_BORDER: ["hide_border", (value) => value === "true"],
+    LINE_HEIGHT: ["line_height", Number],
+    DISPLAY_FORMAT: ["display_format", String],
+    HIDE: ["hide", (value) => value.split(",").map((lang) => lang.trim())],
+    HIDE_TITLE: ["hide_title", (value) => value === "true"],
+    CUSTOM_TITLE: ["custom_title", String],
+    LOCALE: ["locale", String],
+    TITLE_COLOR: ["title_color", String],
+    TEXT_COLOR: ["text_color", String],
+    BG_COLOR: ["bg_color", String],
+    BORDER_COLOR: ["border_color", String],
+    BORDER_RADIUS: ["border_radius", Number],
+    DISABLE_ANIMATIONS: ["disable_animations", (value) => value === "true"],
+};
 
 const options = {};
 
-if (process.env.LAYOUT) {
-    options.layout = process.env.LAYOUT;
-}
+for (const [envName, [optionName, parse]] of Object.entries(optionDefinitions)) {
+    const value = process.env[envName];
 
-if (process.env.LANGS_COUNT) {
-    options.langs_count = Number(process.env.LANGS_COUNT);
+    if (value) {
+        options[optionName] = parse(value);
+    }
 }
-
-if (process.env.CARD_WIDTH) {
-    options.card_width = Number(process.env.CARD_WIDTH);
-}
-
-if (process.env.THEME) {
-    options.theme = process.env.THEME;
-}
-
-if (process.env.HIDE_BORDER) {
-    options.hide_border = process.env.HIDE_BORDER === "true";
-}
-
-if (process.env.LINE_HEIGHT) {
-    options.line_height = Number(process.env.LINE_HEIGHT);
-}
-
-if (process.env.DISPLAY_FORMAT) {
-    options.display_format = process.env.DISPLAY_FORMAT;
-}
-
-if (process.env.HIDE) {
-    options.hide = process.env.HIDE
-        .split(",")
-        .map((lang) => lang.trim());
-}
-
-if (process.env.HIDE_TITLE) {
-    options.hide_title = process.env.HIDE_TITLE === "true";
-}
-
-if (process.env.CUSTOM_TITLE) {
-    options.custom_title = process.env.CUSTOM_TITLE;
-}
-
-if (process.env.LOCALE) {
-    options.locale = process.env.LOCALE;
-}
-
-if (process.env.TITLE_COLOR) {
-    options.title_color = process.env.TITLE_COLOR;
-}
-
-if (process.env.TEXT_COLOR) {
-    options.text_color = process.env.TEXT_COLOR;
-}
-
-if (process.env.BG_COLOR) {
-    options.bg_color = process.env.BG_COLOR;
-}
-
-if (process.env.BORDER_COLOR) {
-    options.border_color = process.env.BORDER_COLOR;
-}
-
-if (process.env.BORDER_RADIUS) {
-    options.border_radius = Number(process.env.BORDER_RADIUS);
-}
-
-if (process.env.DISABLE_ANIMATIONS) {
-    options.disable_animations = process.env.DISABLE_ANIMATIONS === "true";
-}
-
-const outputPath = process.env.OUTPUT_PATH ?? "wakatime-card.svg";
 
 
 if (!apiKey) {
