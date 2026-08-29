@@ -1,5 +1,8 @@
 name: WakaTime Stats Card
 description: Generate a WakaTime stats card using WakaTime API authentication
+branding:
+  icon: bar-chart-2
+  color: gray-dark
 
 inputs:
   wakatime-api-key:
