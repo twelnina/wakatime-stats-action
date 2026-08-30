@@ -1,3 +1,5 @@
+<p align="right">English | <a href="README.ja.md">日本語</a></p>
+
 # WakaTime Stats Action
 
 Generate a customizable SVG card from your coding activity over the last seven
