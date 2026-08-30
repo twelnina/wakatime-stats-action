@@ -8,6 +8,16 @@ This action uses the WakaTime card renderer from the MIT-licensed
 package to generate the card. It fetches your statistics directly from
 WakaTime using your API key.
 
+<details>
+<summary><strong>What is WakaTime?</strong></summary>
+
+[WakaTime](https://wakatime.com/) is a developer productivity platform that
+automatically tracks your coding activity across editors, languages, and
+projects. This action turns those statistics into a customizable SVG card
+that you can display in your GitHub profile or repository README.
+
+</details>
+
 ## Features
 
 - Generates a WakaTime statistics card as an SVG file
