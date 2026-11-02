@@ -6,7 +6,7 @@ import { pathToFileURL } from "node:url";
 const MAX_ATTEMPTS = 5;
 const RETRY_DELAY_MS = 5000;
 
-const apiKey = process.env.WAKATIME_API_KEY;
+const token = process.env.WAKATIME_TOKEN?.trim();
 
 const outputPath = process.env.OUTPUT_PATH ?? "wakatime-card.svg";
 
@@ -43,18 +43,16 @@ for (const [envName, [optionName, parse]] of Object.entries(optionDefinitions)) 
 }
 
 
-if (!apiKey) {
-    throw new Error("WAKATIME_API_KEY is not set");
+if (!token) {
+    throw new Error("WAKATIME_TOKEN is not set");
 }
-
-const authorization = Buffer.from(apiKey).toString("base64");
 
 for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     const response = await fetch(
         "https://api.wakatime.com/api/v1/users/current/stats/last_7_days",
         {
             headers: {
-                Authorization: `Basic ${authorization}`,
+                Authorization: `Bearer ${token}`,
                 Accept: `application/json`,
             },
         },
