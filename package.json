@@ -1,6 +1,6 @@
 {
   "name": "wakatime-stats-action",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Generate a customizable WakaTime stats card using OAuth Bearer authentication",
   "author": "twelnina",

@@ -55,8 +55,7 @@ OAuthアクセストークンで認証し、現在のユーザーの統計情報
 
 `v0.1.0` から移行する場合は、入力名を `wakatime-api-key` から
 `wakatime-token` に変更し、Secretの値もOAuthトークンに置き換えてください。
-`v0.1.0` はOAuth Bearer認証に対応していないため、以下の例では `main` を
-指定しています。この変更のリリース後は、対応するリリースまたはコミットに固定してください。
+OAuth Bearer認証は `v0.1.1` 以降で利用できます。
 
 ### 2. ワークフローを追加する
 
@@ -83,7 +82,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Generate WakaTime card
-        uses: twelnina/wakatime-stats-action@main
+        uses: twelnina/wakatime-stats-action@v0.1.1
         with:
           wakatime-token: ${{ secrets.WAKATIME_TOKEN }}
           output-path: assets/wakatime.svg

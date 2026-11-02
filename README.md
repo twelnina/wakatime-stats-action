@@ -53,9 +53,8 @@ use. API keys are write-only and cannot be used to read statistics. See the
 Do not put the token directly in a workflow file.
 
 If migrating from `v0.1.0`, replace `wakatime-api-key` with `wakatime-token`
-and replace the API key secret with an OAuth token. The example uses `main`
-because `v0.1.0` does not support OAuth Bearer authentication. After this change
-is released, pin the action to a release or commit that includes it.
+and replace the API key secret with an OAuth token. OAuth Bearer authentication
+is supported starting with `v0.1.1`.
 
 ### 2. Add a workflow
 
@@ -82,7 +81,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Generate WakaTime card
-        uses: twelnina/wakatime-stats-action@main
+        uses: twelnina/wakatime-stats-action@v0.1.1
         with:
           wakatime-token: ${{ secrets.WAKATIME_TOKEN }}
           output-path: assets/wakatime.svg
