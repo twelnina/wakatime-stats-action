@@ -2,7 +2,7 @@
   "name": "wakatime-stats-action",
   "version": "0.1.0",
   "private": true,
-  "description": "Generate a customizable WakaTime stats card using API key authentication",
+  "description": "Generate a customizable WakaTime stats card using OAuth Bearer authentication",
   "author": "twelnina",
   "license": "MIT",
   "repository": {

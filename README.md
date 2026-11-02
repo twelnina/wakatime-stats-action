@@ -8,7 +8,7 @@ days, using the WakaTime API and GitHub Actions.
 This action uses the WakaTime card renderer from the MIT-licensed
 [`@stats-organization/github-readme-stats-core`](https://github.com/stats-organization/github-stats-extended/tree/master/packages/core)
 package to generate the card. It fetches your statistics directly from
-WakaTime using your API key.
+WakaTime using your OAuth access token.
 
 <details>
 <summary><strong>What is WakaTime?</strong></summary>
@@ -32,22 +32,30 @@ that you can display in your GitHub profile or repository README.
 The related
 [`stats-organization/github-readme-stats-action`](https://github.com/stats-organization/github-readme-stats-action)
 identifies a WakaTime user by username. This action instead authenticates with
-your WakaTime API key and fetches statistics for the current user. Because the
-API key identifies your account, no custom WakaTime profile username is needed,
+your WakaTime OAuth access token and fetches statistics for the current user. Because the
+token identifies your account, no custom WakaTime profile username is needed,
 so the card can be generated using [WakaTime's Free plan](https://wakatime.com/pricing).
 
 ## Quick start
 
-### 1. Add your WakaTime API key
+### 1. Add your WakaTime OAuth access token
 
-Copy your API key from the [WakaTime API key page](https://wakatime.com/api-key),
-then add it to the repository that will generate the card:
+Create a personal OAuth access token with `read_stats` permission on the
+[WakaTime OAuth page](https://wakatime.com/oauth), then add it to the repository
+that will generate the card. You do not need to publish an OAuth app for personal
+use. API keys are write-only and cannot be used to read statistics. See the
+[WakaTime authentication documentation](https://wakatime.com/developers#authentication).
 
 1. Open **Settings → Secrets and variables → Actions**.
 2. Select **New repository secret**.
-3. Name the secret `WAKATIME_API_KEY` and paste your API key as its value.
+3. Name the secret `WAKATIME_TOKEN` and paste your OAuth access token as its value.
 
-Do not put the API key directly in a workflow file.
+Do not put the token directly in a workflow file.
+
+If migrating from `v0.1.0`, replace `wakatime-api-key` with `wakatime-token`
+and replace the API key secret with an OAuth token. The example uses `main`
+because `v0.1.0` does not support OAuth Bearer authentication. After this change
+is released, pin the action to a release or commit that includes it.
 
 ### 2. Add a workflow
 
@@ -74,9 +82,9 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Generate WakaTime card
-        uses: twelnina/wakatime-stats-action@v0.1.0
+        uses: twelnina/wakatime-stats-action@main
         with:
-          wakatime-api-key: ${{ secrets.WAKATIME_API_KEY }}
+          wakatime-token: ${{ secrets.WAKATIME_TOKEN }}
           output-path: assets/wakatime.svg
           layout: compact
           theme: transparent
@@ -107,7 +115,7 @@ README:
 
 | Input | Required | Default | Description |
 | --- | --- | --- | --- |
-| `wakatime-api-key` | Yes | — | WakaTime API key used to request the current user's statistics. |
+| `wakatime-token` | Yes | — | WakaTime OAuth access token with `read_stats` permission used to request the current user's statistics. |
 | `output-path` | No | `wakatime-card.svg` | Path where the generated SVG is written. |
 | `layout` | No | `normal` | Card layout: `normal` or `compact`. |
 | `langs-count` | No | All | Maximum number of languages to display. |
@@ -193,7 +201,7 @@ supports gradients in the form `angle,color1,color2`, for example
 - WakaTime may still be calculating recent activity. The action retries for a
   short period and fails if the data does not become current.
 - The generated file is overwritten when it already exists.
-- Treat your WakaTime API key as a secret and rotate it if it is exposed.
+- Treat your WakaTime OAuth access token as a secret and rotate it if it is exposed.
 
 ## License
 

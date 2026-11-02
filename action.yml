@@ -5,8 +5,8 @@ branding:
   color: gray-dark
 
 inputs:
-  wakatime-api-key:
-    description: WakaTime API key
+  wakatime-token:
+    description: WakaTime OAuth access token with read_stats permission
     required: true
   
   output-path:
@@ -99,7 +99,7 @@ runs:
       shell: bash
       run: node "${{ github.action_path }}/scripts/generate-wakatime.mjs"
       env:
-        WAKATIME_API_KEY: ${{ inputs.wakatime-api-key }}
+        WAKATIME_TOKEN: ${{ inputs.wakatime-token }}
         OUTPUT_PATH: ${{ inputs.output-path }}
         LAYOUT: ${{ inputs.layout }}
         LANGS_COUNT: ${{ inputs.langs-count }}

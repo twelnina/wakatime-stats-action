@@ -8,7 +8,7 @@ WakaTime APIとGitHub Actionsを使用して、過去7日間のコーディン�
 このActionは、MITライセンスの
 [`@stats-organization/github-readme-stats-core`](https://github.com/stats-organization/github-stats-extended/tree/master/packages/core)
 パッケージに含まれるWakaTimeカードレンダラーを使用してカードを生成します。
-WakaTime APIキーを使用して、WakaTimeから統計情報を直接取得します。
+WakaTime OAuthアクセストークンを使用して、WakaTimeから統計情報を直接取得します。
 
 <details>
 <summary><strong>WakaTimeとは？</strong></summary>
@@ -32,23 +32,31 @@ GitHubプロフィールやリポジトリのREADMEに表示できます。
 関連する
 [`stats-organization/github-readme-stats-action`](https://github.com/stats-organization/github-readme-stats-action)
 は、ユーザー名でWakaTimeユーザーを識別します。一方、このActionはWakaTime
-APIキーで認証し、現在のユーザーの統計情報を取得します。APIキーによって
+OAuthアクセストークンで認証し、現在のユーザーの統計情報を取得します。トークンによって
 アカウントが識別されるため、WakaTimeのプロフィールに独自のユーザー名を
 設定する必要がなく、[WakaTimeのFreeプラン](https://wakatime.com/pricing)でも
 カードを生成できます。
 
 ## クイックスタート
 
-### 1. WakaTime APIキーを追加する
+### 1. WakaTime OAuthトークンを追加する
 
-[WakaTime APIキーページ](https://wakatime.com/api-key)からAPIキーをコピーし、
-カードを生成するリポジトリに追加します。
+[WakaTime OAuthページ](https://wakatime.com/oauth)で `read_stats` 権限を持つ
+個人用OAuthアクセストークンを発行し、カードを生成するリポジトリに追加します。
+個人利用ではOAuthアプリの公開は不要です。APIキーは書き込み専用であり、
+統計情報の取得には使用できません。詳しくは
+[公式の認証仕様](https://wakatime.com/developers#authentication)を参照してください。
 
 1. **Settings → Secrets and variables → Actions** を開きます。
 2. **New repository secret** を選択します。
-3. Secret名を `WAKATIME_API_KEY` とし、APIキーを値として貼り付けます。
+3. Secret名を `WAKATIME_TOKEN` とし、OAuthアクセストークンを値として貼り付けます。
 
-APIキーをワークフローファイルに直接記載しないでください。
+トークンをワークフローファイルに直接記載しないでください。
+
+`v0.1.0` から移行する場合は、入力名を `wakatime-api-key` から
+`wakatime-token` に変更し、Secretの値もOAuthトークンに置き換えてください。
+`v0.1.0` はOAuth Bearer認証に対応していないため、以下の例では `main` を
+指定しています。この変更のリリース後は、対応するリリースまたはコミットに固定してください。
 
 ### 2. ワークフローを追加する
 
@@ -75,9 +83,9 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Generate WakaTime card
-        uses: twelnina/wakatime-stats-action@v0.1.0
+        uses: twelnina/wakatime-stats-action@main
         with:
-          wakatime-api-key: ${{ secrets.WAKATIME_API_KEY }}
+          wakatime-token: ${{ secrets.WAKATIME_TOKEN }}
           output-path: assets/wakatime.svg
           layout: compact
           theme: transparent
@@ -107,7 +115,7 @@ jobs:
 
 | 入力 | 必須 | デフォルト | 説明 |
 | --- | --- | --- | --- |
-| `wakatime-api-key` | Yes | — | 現在のユーザーの統計情報を取得するために使用するWakaTime APIキー。 |
+| `wakatime-token` | Yes | — | 現在のユーザーの統計情報を取得するために使用する、`read_stats` 権限を持つWakaTime OAuthアクセストークン。 |
 | `output-path` | No | `wakatime-card.svg` | 生成するSVGの出力先パス。 |
 | `layout` | No | `normal` | カードのレイアウト：`normal` または `compact`。 |
 | `langs-count` | No | すべて | 表示する言語数の上限。 |
@@ -193,7 +201,7 @@ jobs:
 - WakaTimeが直近の活動を集計中の場合があります。このActionは短時間
   リトライし、最新のデータを取得できなければ失敗します。
 - 生成先に同名のファイルが存在する場合は上書きされます。
-- WakaTime APIキーはSecretとして扱い、漏えいした場合は再発行してください。
+- WakaTime OAuthアクセストークンはSecretとして扱い、漏えいした場合は再発行してください。
 
 ## ライセンス
 
